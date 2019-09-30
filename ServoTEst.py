@@ -41,8 +41,8 @@ ampl = 30
 while True:
         while (ser.in_waiting):
                 ser.read()         
-        center, radius, dist, speed, accel = vision.vision()
-        if( center == None):
+        center, radius, dist, speed, accel, pCenter, pRadius = vision.vision()
+        if(center == None):
                 continue
         x, y = center
         x -= (640/2)

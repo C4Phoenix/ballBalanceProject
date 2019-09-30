@@ -29,12 +29,9 @@ def handleKeyboard(key):
 def track(frame):
     global minRadius
 
-    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-    
-    mask = cv2.inRange(hsv, colorLower, colorUpper)
+    mask = cv2.inRange(frame, colorLower, colorUpper)
     mask = cv2.erode(mask, None, iterations=2)
     mask = cv2.dilate(mask, None, iterations=2)
-    masked = cv2.bitwise_and(frame, frame, mask=mask)
 
     cnts = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     cnts = imutils.grab_contours(cnts)
@@ -66,7 +63,22 @@ def trackMotion(time, center, radius):
     return dist, speed, accel
 
 def trackPlatform(frame):
-    return
+    mask = cv2.inRange(frame, (0, 0, 125), (100, 75, 255))
+    mask = cv2.erode(mask, None, iterations=2)
+    mask = cv2.dilate(mask, None, iterations=2)
+
+    cnts = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    cnts = imutils.grab_contours(cnts)
+
+    if len(cnts) > 0:
+        c = max(cnts, key=cv2.contourArea)
+        ((x, y), radius) = cv2.minEnclosingCircle(c)
+        center = (int(x), int(y))
+
+        if radius > 100:
+            return center, radius
+
+    return None, None
 
 def drawTracking(center, radius, frame):
     global trail, trailLength, color
@@ -124,9 +136,11 @@ def vision():
     time = int(round(Time.time() * 1000))
 
     blurred = cv2.GaussianBlur(raw, (11, 11), 0)
+    hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)
 
     tracked = raw.copy()
-    center, radius = track(blurred)
+    center, radius = track(hsv)
+    pCenter, pRadius = trackPlatform(hsv)
     drawTracking(center, radius, tracked)
 
     prevTime, prevCenter, prevRadius, prevSpeed = prevTrack
@@ -141,7 +155,7 @@ def vision():
 
     handleKeyboard(cv2.waitKey(1))
     
-    return center, radius, dist, speed, accel
+    return center, radius, dist, speed, accel, pCenter, pRadius
 
 
 #%%
