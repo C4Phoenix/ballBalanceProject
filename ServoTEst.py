@@ -1,10 +1,17 @@
 #%%
+!pip install simple-pid
+!pip install pyserial
+!pip install opencv-python
+!pip install imutils
+
+#%%
 import serial
 import time
 import random
 import math
 import vision
 from controller import plateao
+from simple_pid import PID
 
 #%%
 def send(angle1,angle2,angle3):
@@ -35,6 +42,9 @@ def rotatoes():
 #%%
 ser = serial.Serial('COM11',115200)  # open serial port
 vision.open(1)
+#%%
+pid_x = PID(1, 0.1, 0.15)
+pid_y = PID(1, 0.1, 0.15)
 
 #%%
 ampl = 30
@@ -42,16 +52,19 @@ while True:
         while (ser.in_waiting):
                 ser.read()         
         center, radius, dist, speed, accel = vision.vision()
+        center, radius, dist, speed, accel = (0, 0), 0, 0, 0, 0
         if( center == None):
                 continue
         x, y = center
         x -= (640/2)
         y -= (480/2)
 
-        max_angle = 40
+        x_control = pid_x(x)        
+        y_control = pid_y(y)        
 
-        x_angle = x / (640/2) * max_angle * 1
-        y_angle = y / (480/2) * max_angle * 1
+        max_angle = 40
+        x_angle = x_control / (640/2) * max_angle * 1
+        y_angle = y_control / (480/2) * max_angle * 1
        # print(x_angle, y_angle)       
 
         time.sleep(0.01)
