@@ -17,9 +17,11 @@ def plateao(X_angle, Y_angle, HightPointY=3, visualize=False, servoArmLength = 7
     X_angle /=2
     Y_angle /=2
 
-    servo1Desired = X_angle
+    servo1Desired =  X_angle
     servo2Desired = -X_angle/3 + 2 * -Y_angle / 3
     servo3Desired = -X_angle/3 + 2 * Y_angle / 3
+
+    print(servo1Desired, servo2Desired, servo3Desired)
 
     servo1, servo2, servo3 = 0,0,0
 
@@ -77,22 +79,26 @@ def plateao(X_angle, Y_angle, HightPointY=3, visualize=False, servoArmLength = 7
 plateao(0,68 , HightPointY=0,visualize = True)
 
 #%%
-plateao(0,50 , HightPointY=0,visualize = True, distanceFromCentre= 12)
+plateao(0,-68 , HightPointY=0,visualize = True)
 
 #%%
-plateao(0,-50 , HightPointY=0,visualize = True)
+plateao(68 ,0 , HightPointY=0,visualize = True)
 
 #%%
-plateao(73,0 , HightPointY=0,visualize = True)
+plateao(-61 ,0 , HightPointY=0,visualize = True)
 
 #%%
-plateao(-47,0 , HightPointY=0,visualize = True)
+angle = 45
+plateao(angle, angle , HightPointY=0,visualize = True)
 
 #%%
-plateao(-33,33 , HightPointY=0,visualize = True)
-#%%
-plateao(33,33 , HightPointY=0,visualize = True)
-#%%
-plateao(-33,-33 , HightPointY=0,visualize = True)
+angle = 45
+plateao(-angle, angle , HightPointY=0,visualize = True)
 
 #%%
+angle = 45
+plateao(angle, -angle , HightPointY=0,visualize = True)
+
+#%%
+angle = 45
+plateao(-angle, -angle , HightPointY=0,visualize = True)
