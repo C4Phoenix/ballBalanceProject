@@ -21,7 +21,7 @@ def plateao(X_angle, Y_angle, HightPointY=3, visualize=False, servoArmLength = 7
     servo2Desired = -X_angle * 1/2 + -Y_angle * (math.sqrt(3)/2)
     servo3Desired = -X_angle * 1/2 +  Y_angle * (math.sqrt(3)/2)
 
-    print(servo1Desired, servo2Desired, servo3Desired)
+    #print(servo1Desired, servo2Desired, servo3Desired)
 
     servo1, servo2, servo3 = 0,0,0
 
@@ -70,7 +70,7 @@ def plateao(X_angle, Y_angle, HightPointY=3, visualize=False, servoArmLength = 7
             break
         
     if(visualize): visualizeArms(servo1, servo2, servo3, armLength = servoArmLength, servoToCentre = distanceFromCentre)
-    print('iterations: ', iterations)
+    #print('iterations: ', iterations)
     return (servo1, servo2, servo3)
 
 

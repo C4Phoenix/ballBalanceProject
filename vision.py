@@ -11,7 +11,7 @@ from collections import deque
 # Variables
 ballDiameter = 40  # mm
 capSrc = 0
-colorLower = (4, 114, 114)
+colorLower = (4, 165, 190)
 colorUpper = (30, 255, 255)
 minRadius = 10
 trailLength = 64
