@@ -48,13 +48,15 @@ vision.open(1)
 center, radius, dist, speed, accel, pCenter, pRadius = vision.vision()
 x_center, y_center = pCenter
 
-max_angle = 15
+max_angle = 30
 edge_scaler= pRadius/max_angle
 pid_x = PID(edge_scaler, 0.00, 0, output_limits=(-max_angle, max_angle))
 pid_y = PID(edge_scaler, 0.00, 0, output_limits=(-max_angle, max_angle))
 
 pid_x.setpoint = x_center
 pid_y.setpoint = y_center
+
+xx, yy = 0, 0
 
 while True:
         while (ser.in_waiting):
@@ -79,8 +81,19 @@ while True:
         time.sleep(0.01)
         xx, yy, zz = 0,0,0
         if(x_angle <= 30 and y_angle <= 30 ):
+                prevYY = yy
                 xx,yy,zz = plateao(x_angle, y_angle, distanceFromCentre=12, HightPointY=0)
+                if(xx != -1)
+                        prevXX = xx
+                else 
+                        xx = prevXX
+                
+                if(xx != -1)
+                        prevYY = yy
+                else 
+                        yy = prevYY
         else: print('error')
+
         if(xx < 0): xx = 0
         if(xx > 70): xx = 70
         
@@ -96,7 +109,6 @@ while True:
         ser.flushOutput()
 
         time.sleep(0.005)
-
 
 #%%
 vision.release()
