@@ -142,6 +142,7 @@ def vision():
     center, radius = track(hsv)
     pCenter, pRadius = trackPlatform(hsv)
     drawTracking(center, radius, tracked)
+    drawTracking(pCenter, pRadius, tracked)
 
     prevTime, prevCenter, prevRadius, prevSpeed = prevTrack
 

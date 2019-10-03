@@ -40,48 +40,47 @@ def rotatoes():
         time.sleep(0.5)
         
 #%%
-ser = serial.Serial('COM4',115200)  # open serial port
-vision.open(1)
-#%%
-
-#%%
-center, radius, dist, speed, accel, pCenter, pRadius = vision.vision()
-x_center, y_center = pCenter
-
+ser = serial.Serial('COM5',115200)  # open serial port
+vision.open(0)
 max_angle = 30
-edge_scaler= pRadius/max_angle
-pid_x = PID(edge_scaler, 0.00, 0, output_limits=(-max_angle, max_angle))
-pid_y = PID(edge_scaler, 0.00, 0, output_limits=(-max_angle, max_angle))
+
+#%%
+send(0, 0, 0)
+time.sleep(0.1)
+
+pid_x = PID(1, 0, .25)
+pid_y = PID(1, 0, .25)
 
 pid_x.setpoint = x_center
 pid_y.setpoint = y_center
 
-xx, yy = 0, 0
+prevXX = 0
+prevYY = 0
 
 while True:
         while (ser.in_waiting):
-                ser.read()         
-        center, radius, dist, speed, accel, pop, pap = vision.vision()
-        if(center == None):
+                ser.read()
+        center, radius, dist, speed, accel, pCenter, pRadius = vision.vision()
+        x_center, y_center = pCenter
+        if(center == None):                
+                send(0, 0, 0)
                 continue
         x, y = center
-        # x -= x_center
-        # y -= y_center
+        x -= x_center
+        y -= y_center
 
-        x_angle = pid_x(x)
-        y_angle = pid_y(y)
+        x_angle = pid_x(x) / pRadius * -max_angle
+        y_angle = pid_y(y) / pRadius * -max_angle
 
         print('Ball: ', x, y, '\tPID Output: ', x_angle, y_angle)
-        # continue
-        # max_angle = 30
-        # x_angle = x_control / pRadius * max_angle * 1
-        # y_angle = y_control / pRadius * max_angle * 1
-#        # print(x_angle, y_angle)       
+
+        # # x_angle = x_control / pRadius * max_angle * 1
+        # # y_angle = y_control / pRadius * max_angle * 1
+        # # print(x_angle, y_angle)       
 
         time.sleep(0.01)
         xx, yy, zz = 0,0,0
-        if(x_angle <= 30 and y_angle <= 30 ):
-                prevYY = yy
+        if(x_angle <= max_angle and x_angle >= -max_angle and y_angle <= max_angle and y_angle >= -max_angle):
                 xx,yy,zz = plateao(x_angle, y_angle, distanceFromCentre=12, HightPointY=0)
                 if(xx != -1)
                         prevXX = xx
