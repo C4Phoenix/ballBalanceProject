@@ -48,8 +48,6 @@ max_angle = 30
 #%%
 send(0, 0, 0)
 time.sleep(0.1)
-center, radius, dist, speed, accel, pCenter, pRadius = vision.vision()
-x_center, y_center = pCenter
 
 pid_x = PID(1, 0, .25)
 pid_y = PID(1, 0, .25)
@@ -57,7 +55,8 @@ pid_y = PID(1, 0, .25)
 while True:
         while (ser.in_waiting):
                 ser.read()
-        center, radius, dist, speed, accel, pop, pap = vision.vision()
+        center, radius, dist, speed, accel, pCenter, pRadius = vision.vision()
+        x_center, y_center = pCenter
         if(center == None):                
                 send(0, 0, 0)
                 continue
