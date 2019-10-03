@@ -42,7 +42,7 @@ def rotatoes():
 #%%
 ser = serial.Serial('COM5',115200)  # open serial port
 vision.open(0)
-max_angle = 30
+max_angle = 45.0
 
 #%%
 send(0, 0, 0)
@@ -50,8 +50,12 @@ time.sleep(0.1)
 center, radius, dist, speed, accel, pCenter, pRadius = vision.vision()
 x_center, y_center = pCenter
 
-pid_x = PID(1, 0, .25)
-pid_y = PID(1, 0, .25)
+# pid_x = PID(1, 0.0000, .25)
+# pid_y = PID(1, 0.0000, .25)
+
+pid_x = PID(1, 0.0002, .25)
+pid_y = PID(1, 0.0002, .25)
+
 prevXX = 0
 prevYY = 0
 
@@ -62,13 +66,19 @@ while True:
         if(center == None):                
                 send(0, 0, 0)
                 continue
+                pid_x.reset
+                pid_y.reset
         x, y = center
 
         x -= x_center - 50
         y -= y_center - 50
 
-        x_angle = pid_x(x) / pRadius * -max_angle
-        y_angle = pid_y(y) / pRadius * -max_angle
+        # x_angle = (pid_x(x) / pRadius) * -max_angle
+        # y_angle = (pid_y(y) / pRadius) * -max_angle
+
+        x_angle = ((pid_x(x) / pRadius) ** 1.2).real * -max_angle
+        y_angle = ((pid_y(y) / pRadius) ** 1.2).real * -max_angle
+
 
         print('Ball: ', x, y, '\tPID Output: ', x_angle, y_angle)
 
@@ -78,16 +88,17 @@ while True:
 
         time.sleep(0.01)
         xx, yy, zz = 0,0,0
-        if(x_angle <= max_angle and x_angle >= -max_angle and y_angle <= max_angle and y_angle >= -max_angle):
+        if( float(x_angle) <= float(max_angle) and float(x_angle) >= float(-max_angle) and
+            float(y_angle) <= float(max_angle) and float(y_angle) >= float(-max_angle)):
                 xx,yy,zz = plateao(x_angle, y_angle, distanceFromCentre=12, HightPointY=0)
-                if(xx != -1)
+                if(xx != -1):
                         prevXX = xx
-                else 
+                else:
                         xx = prevXX
                 
-                if(xx != -1)
+                if(xx != -1):
                         prevYY = yy
-                else 
+                else:
                         yy = prevYY
         else: print('error')
 
