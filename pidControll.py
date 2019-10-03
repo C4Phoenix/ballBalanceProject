@@ -104,15 +104,16 @@ u = -1*math.pi/180 # u = alpha
 
 # The model that delivers the dx/dt matrix as defined above
 # This model is used by odeint
-def model(x, t, u):
-    xdot = np.zeros(2)   
+def model(x, t, currentAngle):
+    speed = x[1]
+    acceleration = (3/5)*g*np.sin(currentAngle)
     
-    xdot[0] = x[1]
-    xdot[1] = (3/5)*g*np.sin(u)
-    
-    if ( x[1] > 0 ):
-        xdot[1] += -(3/5)*fr*g*np.cos(u)
+    if ( speed > 0 ):
+        acceleration += -(3/5)*fr*g*np.cos(currentAngle)
         
+    xdot = np.zeros(2)   
+    xdot[0] = speed
+    xdot[1] = acceleration
     return xdot
 
 # Some results for plotting
@@ -124,15 +125,17 @@ time     = []
 
 # Controller
 ref = 2
-Kp = 0.01 #0.1
-Ki = 0.000001#0.0000000001
-Kd = 10 # 10
+Kp = 0.003 #0.1
+Ki = 0#0.0000000001
+Kd = 80 # 10
 esum = 0
 perr = 0
 maxsum = 100000
 
 x = x0
-for i in range (0, int(25/ts)):
+CurrentAngle =0
+AngleCnage = 2
+for i in range (0, int(60/ts)):
     # Controller
     error = ref - x[0]
     esum = esum + error
@@ -146,7 +149,9 @@ for i in range (0, int(25/ts)):
     
     #if ( esum > maxsum ):
     #    esum = maxsum
-    
+
+    if(CurrentAngle >)
+    if(u > )
     y = odeint(model, x, [0, ts], args=(u,))
     x = y[1]
     
@@ -165,3 +170,5 @@ line, = plt.plot(time, position, label='Slinger') # blue
 line, = plt.plot(time, velocity, label='Slinger') # orange
 line, = plt.plot(time, errors, label='Slinger') # green
 line, = plt.plot(time, angles, label='Slinger') # red
+ax.legend(('position','velocity','errors','angles'))
+#%%
