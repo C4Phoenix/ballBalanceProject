@@ -19,3 +19,5 @@ visualizer.ipynb
 # End of https://www.gitignore.io/api/visualstudiocode
 __pycache__/visualizer.cpython-37.pyc
 __pycache__/calculateAngle1Servo.cpython-37.pyc
+
+__pycache__/

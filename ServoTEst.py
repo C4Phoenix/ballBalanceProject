@@ -41,11 +41,11 @@ def rotatoes():
         time.sleep(0.5)
         
 #%%
-ser = serial.Serial('COM11',115200)  # open serial port
+ser = serial.Serial('COM12',115200)  # open serial port
 vision.open(1)
 #%%
-pid_x = PID(1, 0.01, 0.15)
-pid_y = PID(1, 0.01, 0.15)
+# pid_x = PID(1, 0.01, 0.15)
+# pid_y = PID(1, 0.01, 0.15)
 
 #%%
 ampl = 30
@@ -60,12 +60,12 @@ while True:
         x -= x_center
         y -= y_center
 
-        x_control = pid_x(x)
-        y_control = pid_y(y)        
+        #x_control = pid_x(x)
+        #y_control = pid_y(y)        
 
         max_angle = 15
-        x_angle = x_control / pRadius * max_angle * 1
-        y_angle = y_control / pRadius * max_angle * 1
+        x_angle = x / pRadius * max_angle * 1
+        y_angle = y / pRadius * max_angle * 1
        # print(x_angle, y_angle)       
 
         time.sleep(0.01)
