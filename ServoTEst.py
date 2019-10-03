@@ -43,7 +43,6 @@ def rotatoes():
 ser = serial.Serial('COM5',115200)  # open serial port
 vision.open(0)
 max_angle = 30
-#%%
 
 #%%
 send(0, 0, 0)
@@ -53,6 +52,9 @@ x_center, y_center = pCenter
 
 pid_x = PID(1, 0, .25)
 pid_y = PID(1, 0, .25)
+prevXX = 0
+prevYY = 0
+
 while True:
         while (ser.in_waiting):
                 ser.read()
@@ -78,6 +80,17 @@ while True:
         xx, yy, zz = 0,0,0
         if(x_angle <= max_angle and x_angle >= -max_angle and y_angle <= max_angle and y_angle >= -max_angle):
                 xx,yy,zz = plateao(x_angle, y_angle, distanceFromCentre=12, HightPointY=0)
+                if(xx != -1)
+                        prevXX = xx
+                else 
+                        xx = prevXX
+                
+                if(xx != -1)
+                        prevYY = yy
+                else 
+                        yy = prevYY
+        else: print('error')
+
         if(xx < 0): xx = 0
         if(xx > 70): xx = 70
         
@@ -93,7 +106,6 @@ while True:
         ser.flushOutput()
 
         time.sleep(0.005)
-
 
 #%%
 vision.release()
